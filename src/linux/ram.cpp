@@ -23,6 +23,7 @@ struct MemInfo {
 };
 
 void get_from_sysconf(MemInfo& mi) {
+#ifdef __linux__
   int64_t pages = sysconf(_SC_PHYS_PAGES);
   int64_t available_pages = sysconf(_SC_AVPHYS_PAGES);
   int64_t page_size = sysconf(_SC_PAGESIZE);
@@ -32,6 +33,7 @@ void get_from_sysconf(MemInfo& mi) {
   if (available_pages > 0 && page_size > 0) {
     mi.available = available_pages * page_size;
   }
+#endif
 }
 
 void set_value(std::string& line, int64_t* dst) {

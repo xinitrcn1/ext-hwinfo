@@ -5,7 +5,11 @@
 #include <hwinfo/network.h>
 #include <ifaddrs.h>
 #include <net/if.h>
+#ifdef __linux__
 #include <netpacket/packet.h>
+#endif
+#include <sys/socket.h>
+#include <netinet/in.h>
 #include <sys/ioctl.h>
 
 #include <cstring>
@@ -78,6 +82,7 @@ std::string getIp6(const std::string& interface) {
 
 std::vector<Network> getAllNetworks() {
   std::vector<Network> networks;
+#ifdef __linux__
   struct ifaddrs* ifaddr;
   if (getifaddrs(&ifaddr) == -1) {
     perror("getifaddrs");
@@ -98,6 +103,7 @@ std::vector<Network> getAllNetworks() {
     networks.push_back(std::move(network));
   }
   freeifaddrs(ifaddr);
+#endif
   return networks;
 }
 
